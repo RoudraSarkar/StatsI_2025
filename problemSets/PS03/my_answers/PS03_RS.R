@@ -31,14 +31,25 @@ pkgTest <- function(pkg){
 setwd(dirname(rstudioapi::getActiveDocumentContext()$path))
 
 #Question1.1 
-# read in data
 inc.sub <- read.csv("https://raw.githubusercontent.com/ASDS-TCD/StatsI_2025/main/datasets/incumbents_subset.csv")
 head(inc.sub)
 summary(inc.sub)
 model <- lm(voteshare ~ difflog, data = inc.sub)
 summary(model)
+library(stargazer)
+stargazer(model,
+          type = "latex",                        
+          title = "Regression Results for Model 1: voteshare ~ difflog",
+          dep.var.labels = "Incumbent Vote Share",  
+          covariate.labels = c("Spending Difference (difflog)"),  
+          digits = 4,                           
+          omit.stat = c("f", "ser"),              
+          align = TRUE,                           
+          no.space = TRUE)                        
+
 
 #Question1.2 
+library(ggplot2)
 ggplot(inc.sub, aes(x = difflog, y = voteshare)) +
   geom_point(color = "blue", alpha = 0.6) +             
   geom_smooth(method = "lm", se = FALSE, color = "red") +  
@@ -59,6 +70,15 @@ coef(model)
 #Question2.1
 model2 <- lm(presvote ~ difflog, data = inc.sub)
 summary(model2)
+stargazer(model2,
+          type = "latex",                        
+          title = "Regression Results for Model 2: presvote ~ difflog",
+          dep.var.labels = "presvote",  
+          covariate.labels = c("Spending Difference (difflog)"),  
+          digits = 4,                           
+          omit.stat = c("f", "ser"),              
+          align = TRUE,                           
+          no.space = TRUE) 
 
 #Question2.2
 ggplot(inc.sub, aes(x = difflog, y = presvote)) +
@@ -79,8 +99,17 @@ head(residuals_model2)
 coef(model2)
 
 #Question3.1 
-model3 <- lm(voteshare ~ presvote, data = inc.sub)
+model3 <- lm(voteshare ~ presvote, data = inc.sub)    
 summary(model3)
+stargazer(model3,
+          type = "latex",                        
+          title = "Regression Results for Model 3: voteshare ~ presvote",
+          dep.var.labels = "Incumbent Vote Share",  
+          covariate.labels = c("presvote"),  
+          digits = 4,                           
+          omit.stat = c("f", "ser"),              
+          align = TRUE,                           
+          no.space = TRUE) 
 
 #Question3.2
 ggplot(inc.sub, aes(x = presvote, y = voteshare)) +
@@ -99,6 +128,15 @@ coef(model3)
 #Question4.1
 residuals_model_reg <- lm(residuals_model ~ residuals_model2)
 summary(residuals_model_reg)
+stargazer(residuals_model_reg,
+          type = "latex",                        
+          title = "Regression Results for Model 4: residual_model ~ residuals_model2",
+          dep.var.labels = "residual_model",  
+          covariate.labels = c("residual_model2"),  
+          digits = 4,                           
+          omit.stat = c("f", "ser"),              
+          align = TRUE,                           
+          no.space = TRUE) 
 
 #Question4.2
 ggplot(data = inc.sub, aes(x = residuals_model2, y = residuals_model)) +
@@ -118,6 +156,15 @@ round(coef(residuals_model_reg), 4)
 #Question5.1
 model4 <- lm(voteshare ~ difflog + presvote, data = inc.sub)
 summary(model4)
+stargazer(model4,
+          type = "latex",                        
+          title = "Regression Results for Model 4: voteshare ~ difflog + presvote",
+          dep.var.labels = "Incumbent Vote Share",  
+          covariate.labels = c("Spending Difference (difflog) + presvote"),  
+          digits = 4,                           
+          omit.stat = c("f", "ser"),              
+          align = TRUE,                           
+          no.space = TRUE) 
 
 #Question5.2 
 coef(model4)
